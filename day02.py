@@ -2,29 +2,35 @@ import numpy as np
 
 def red_nosed_standard(v): 
     diff = np.diff(v)
+    abs = np.abs(diff)
 
     monotonic = np.all(diff < 0) or np.all(diff > 0)
-    bounded  = np.all(np.abs(diff) >= 1) and np.all(np.abs(diff) <= 3)
+    bounded  = np.all(abs >= 1) and np.all(abs <= 3)
 
     return monotonic and bounded
 
 def leave_out_one_standard(v): 
     return any(
-            list(
-                map(
-                    red_nosed_standard, 
-                    [
-                        np.delete(v, i) for i in range(len(v))
-                    ]
-                )
+        list(
+            map(
+                red_nosed_standard, 
+                [
+                    np.delete(v, i) for i in range(len(v))
+                ]
             )
         )
+    )
 
-def count_safe_strict(lines):
-    return sum(1 for row in lines if red_nosed_standard(row))
+def count_safe(lines, standard): 
+    return len(
+        list(
+            filter(
+                standard, 
+                lines
+            )
+        )
+    )
 
-def count_safe_one_fault_allowed(lines): 
-    return sum(1 for row in lines if red_nosed_standard(row) or leave_out_one_standard(row))
      
 if __name__ == '__main__': 
     src = './input02.txt' 
@@ -39,5 +45,7 @@ if __name__ == '__main__':
         in open(src, 'r').readlines()
     ]
 
-    print(count_safe_strict(lines))
-    print(count_safe_one_fault_allowed(lines))
+    print(count_safe(lines, red_nosed_standard))
+
+    relaxed_standard = lambda v : red_nosed_standard(v) or leave_out_one_standard(v)
+    print(count_safe(lines, relaxed_standard))
