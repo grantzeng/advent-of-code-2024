@@ -20,16 +20,11 @@ def leave_out_one_standard(v):
 def count_safe(lines, predicate): 
     return sum(1 for _ in filter(predicate, lines))
 
-     
 if __name__ == '__main__': 
     src = './input02.txt' 
     
     lines =  [
-        np.array(
-            list(
-                map(int,line.split())
-            )
-        )
+        np.array([int(_) for _ in line.split()]) 
         for line 
         in open(src, 'r').readlines()
     ]
