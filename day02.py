@@ -11,25 +11,14 @@ def red_nosed_standard(v):
 
 def leave_out_one_standard(v): 
     return any(
-        list(
-            map(
-                red_nosed_standard, 
-                [
-                    np.delete(v, i) for i in range(len(v))
-                ]
-            )
+        red_nosed_standard(
+            np.concatenate((v[:i], v[i + 1, :]))
+            for i in range(v)
         )
     )
 
-def count_safe(lines, standard): 
-    return len(
-        list(
-            filter(
-                standard, 
-                lines
-            )
-        )
-    )
+def count_safe(lines, predicate): 
+    return sum(1 for _ in filter(predicate, lines))
 
      
 if __name__ == '__main__': 
