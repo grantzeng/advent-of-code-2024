@@ -8,8 +8,23 @@ def red_nosed_standard(v):
 
     return monotonic and bounded
 
-def count_safe(lines):
+def leave_out_one_standard(v): 
+    return any(
+            list(
+                map(
+                    red_nosed_standard, 
+                    [
+                        np.delete(v, i) for i in range(len(v))
+                    ]
+                )
+            )
+        )
+
+def count_safe_strict(lines):
     return sum(1 for row in lines if red_nosed_standard(row))
+
+def count_safe_one_fault_allowed(lines): 
+    return sum(1 for row in lines if red_nosed_standard(row) or leave_out_one_standard(row))
      
 if __name__ == '__main__': 
     src = './input02.txt' 
@@ -24,4 +39,5 @@ if __name__ == '__main__':
         in open(src, 'r').readlines()
     ]
 
-    print(count_safe(lines))
+    print(count_safe_strict(lines))
+    print(count_safe_one_fault_allowed(lines))
